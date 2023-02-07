@@ -19,7 +19,7 @@ export default function AddProduct() {
   //set states after reciving fetched data
   useEffect(() => {
     //first get cattegories (product types)
-    getCategories('https://scandiweb3.vercel.app')
+    getCategories('')
     .then(categ => {
       let temp_categ = [];
       categ.results.map(cat => {
@@ -58,7 +58,7 @@ export default function AddProduct() {
     const onSubmit = async (data) => {
       data.category_id = selectedOpt;
       data.category_properties = productAttributes[selectedOpt];
-      const request = await createProduct('https://scandiweb3.vercel.app', data);
+      const request = await createProduct('', data);
       const response = await request.json();
       const results = await response.results;
       const errors = await response.errors;
