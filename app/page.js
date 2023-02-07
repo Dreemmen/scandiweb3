@@ -11,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     //first get cattegories (product types)
-    getProducts('http://heyarnold.online')
+    getProducts('')
     .then(prods => {
       setProducts(prods.results);
     });
@@ -35,7 +35,7 @@ async function massDelete(){
   //filter out empty
   selected_prods = selected_prods.filter((elm ) => elm)
   //make fetch request (use function deteleProducts(url. arrayofids))
-  const request = await deleteProducts('http://heyarnold.online', JSON.stringify(selected_prods));
+  const request = await deleteProducts('', JSON.stringify(selected_prods));
     //refresh page for new DOM
     window.location.reload();
 }
