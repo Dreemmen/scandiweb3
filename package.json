@@ -2,6 +2,7 @@
   "name": "scandiweb3",
   "version": "0.1.0",
   "private": true,
+  "main": "server.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,8 +13,11 @@
     "@next/font": "13.1.6",
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
+    "mysql2": "^3.1.0",
     "next": "13.1.6",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.43.0",
+    "sass": "^1.58.0"
   }
 }

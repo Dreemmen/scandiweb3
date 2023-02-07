@@ -1,91 +1,60 @@
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from './page.module.css'
+"use client"
+import Topbar from 'app/(components)/Topbar'
+import { useState, useEffect } from 'react';
+import Product from 'app/(components)/Product';
+import getProducts from 'pages/api/requests/getProducts';
+import deleteProducts from 'pages/api/requests/deleteProducts';
 
-const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    //first get cattegories (product types)
+    getProducts('http://heyarnold.online')
+    .then(prods => {
+      setProducts(prods.results);
+    });
+  }, []);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+  }
+  
+async function massDelete(){
+  let form = document.getElementById('product_grid');
+  let selected_prods = [];
+  // get all form checkboxes and values into array
+  products.forEach((product, index) => {
+    product.select?selected_prods[index]=product.id:'';
+    //while gettings checkboxes, find parent element and delete product. or somehow remove them from useState
+});
+  setProducts(
+    (products) => products.filter((data, index) => !(data.id===selected_prods[index]))
+    )// unset array element
+  //filter out empty
+  selected_prods = selected_prods.filter((elm ) => elm)
+  //make fetch request (use function deteleProducts(url. arrayofids))
+  const request = await deleteProducts('http://heyarnold.online', JSON.stringify(selected_prods));
+    //refresh page for new DOM
+    window.location.reload();
+}
+  
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className=''>
+    <Topbar>
+      <div className='link'><a href="/add-product">Add</a></div>
+      <div className='link delete-checkbox' onClick={massDelete}><a href="#">Mass delete</a></div>
+    </Topbar>
+      <form id="product_grid" action="" method="post" onSubmit={handleSubmit}>
+        {products.map((product, index) =>
+        <div key={index} className={("flex-box")}>
+          <Product id={product.id} sku={product.sku} name={product.name} type={product.type} price={product.price} params={product.parameters_value} >
+          <input  onChange={(e) => { product.select = e.target.checked; setProducts(products); }} type="checkbox" name="mass_delete[]" className="delete-checkbox" value={product.id} />
+          </Product>
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-        <div className={styles.thirteen}>
-          <Image src="/thirteen.svg" alt="13" width={40} height={31} priority />
-        </div>
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+        )}
+      </form>
     </main>
   )
 }
