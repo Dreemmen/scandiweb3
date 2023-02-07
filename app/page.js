@@ -11,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     //first get cattegories (product types)
-    getProducts('')
+    getProducts('https://scandiweb3.vercel.app')
     .then(prods => {
       setProducts(prods.results);
     });
